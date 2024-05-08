@@ -9,7 +9,12 @@ const cors = require("cors");
 const { type } = require("os");
 
 app.use(express.json());
-app.use(cors());
+app.use(cors({
+    credentials: true,
+    origin: '*', // Allow requests from any origin
+    methods: 'GET', // Allow only GET requests
+    allowedHeaders: 'application/json' // Allow only specified headers
+  }));
 
 
 
