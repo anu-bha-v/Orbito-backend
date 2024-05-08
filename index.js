@@ -7,6 +7,7 @@ const multer = require("multer");
 const path = require("path");
 const cors = require("cors");
 const { type } = require("os");
+const fs = require('fs');
 
 app.use(express.json());
 app.use(cors());
@@ -40,11 +41,24 @@ const upload = multer({storage:storage})
 app.use('/images',express.static('upload/images'))
 
 app.post("/upload",upload.single('product'),(req,res)=>{
-    res.json({
-        success:1,
-        image_url:`https://orbito-backend.onrender.com/images/${req.file.filename}`
-    })
-})
+    const destinationPath = path.join(__dirname, 'upload/images', req.file.originalname);
+    fs.copyFile(req.file.path, destinationPath, (err) => {
+        if (err) {
+            console.error('Error copying file to backend image folder:', err);
+            res.status(500).json({ success: 0, error: 'Failed to save file to backend image folder' });
+        } else {
+            res.json({
+                success: 1,
+                image_url: `https://orbito-backend.onrender.com/images/${req.file.filename}`
+            });
+        }
+    });
+});
+//     res.json({
+//         success:1,
+//         image_url:`https://orbito-backend.onrender.com/images/${req.file.filename}`
+//     })
+// })
 
 // schea for creating product
 
