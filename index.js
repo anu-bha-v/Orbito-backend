@@ -42,7 +42,7 @@ app.use('/images',express.static('upload/images'))
 app.post("/upload",upload.single('product'),(req,res)=>{
     res.json({
         success:1,
-        image_url:`https://localhost:${port}/images/${req.file.filename}`
+        image_url:`https://orbito-backend.onrender.com/images/${req.file.filename}`
     })
 })
 
