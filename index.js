@@ -54,13 +54,37 @@ app.post("/upload",upload.single('product'),(req,res)=>{
         }
     });
 });
-//     res.json({
-//         success:1,
-//         image_url:`https://orbito-backend.onrender.com/images/${req.file.filename}`
-//     })
-// })
 
-// schea for creating product
+// creatng schema for  contact us page
+
+const ContactSchema = new mongoose.Schema({
+    fullname: String,
+    mobilenumber: String,
+    email: String,
+    subject: String,
+    description: String,
+    date: {
+        type: Date,
+        default: Date.now
+    }
+});
+
+// creating endpoint for contatus page
+
+const Contact = mongoose.model('Contact', ContactSchema);
+
+app.post('/contactus', async (req, res) => {
+    try {
+        const { fullname, mobilenumber, email, subject, description } = req.body;
+        const contact = new Contact({ fullname, mobilenumber, email, subject, description });
+        await contact.save();
+        res.json({ success: true, message: 'Contact information submitted successfully!' });
+    } catch (error) {
+        console.error('Error submitting contact information:', error);
+        res.status(500).json({ success: false, message: 'Failed to submit contact information.' });
+    }
+});
+
 
 const Product = mongoose.model("product",{
     id:{
